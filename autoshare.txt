@@ -1,0 +1,345 @@
+/**
+ * Facebook AutoShare API Module
+ * Renewed for Production - Uses REST APIs instead of browser automation
+ * Compatible with Replit environment
+ * 
+ * Features:
+ * - Schedule posts for future publishing
+ * - Publish instantly to Facebook page
+ * - Auto-post to multiple Facebook groups
+ * - Share posts to group walls
+ * - Real-time API status checking
+ * 
+ * Developed by Mohamed Safwat 2025
+ */
+
+import express from 'express';
+import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5000';
+
+app.use(express.json());
+
+// Helper: Random delay for human-like behavior
+const randomDelay = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// ==================== HOME ENDPOINT ====================
+app.get('/', (req, res) => {
+  res.json({
+    status: '🚀 Facebook AutoShare API - Renewed v2.0',
+    message: '✅ Server Running on Replit with REST API Architecture',
+    environment: 'Production-Ready',
+    architecture: 'REST API-based (no browser automation)',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      status: 'GET /status',
+      testApi: 'GET /test-api',
+      schedulPost: 'POST /schedule-post',
+      publishPost: 'POST /publish-post',
+      autoPostGroups: 'POST /auto-post-groups',
+      sharePosts: 'POST /share-posts',
+      listScheduled: 'GET /list-scheduled-posts'
+    }
+  });
+});
+
+// ==================== API STATUS CHECK ====================
+app.get('/status', async (req, res) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/test-facebook`);
+    
+    res.json({
+      status: '✅ API Connected',
+      message: 'Facebook AutoShare API is operational',
+      connection: {
+        mainApi: 'Connected ✅',
+        facebookTokens: response.data.tokens?.status || 'Unknown',
+        timestamp: new Date().toISOString()
+      },
+      availableEndpoints: response.data.endpoints || {}
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: '❌ API Disconnected',
+      error: error.message,
+      suggestion: 'Make sure main server is running on port 5000'
+    });
+  }
+});
+
+// ==================== TEST API CONNECTION ====================
+app.get('/test-api', async (req, res) => {
+  try {
+    console.log('🧪 Testing API connection...');
+    
+    const healthCheck = await axios.get(`${API_BASE_URL}/api/server-health`);
+    const testFb = await axios.get(`${API_BASE_URL}/test-facebook`);
+    
+    res.json({
+      success: true,
+      message: '✅ All systems operational',
+      serverHealth: {
+        uptime: healthCheck.data?.uptime || 'Unknown',
+        memory: healthCheck.data?.memory || 'Unknown'
+      },
+      facebookStatus: testFb.data?.status || 'Ready'
+    });
+  } catch (error) {
+    console.error('❌ Test failed:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      note: 'Ensure main server is running on http://localhost:5000'
+    });
+  }
+});
+
+// ==================== SCHEDULE POST ====================
+app.post('/schedule-post', async (req, res) => {
+  const { content, image, videoUrl, scheduledTime, groups } = req.body;
+  
+  try {
+    console.log('📅 Scheduling post...');
+    
+    if (!content) {
+      return res.status(400).json({ error: 'Content is required' });
+    }
+    
+    const payload = {
+      content,
+      image,
+      videoUrl,
+      scheduledTime: scheduledTime || new Date(Date.now() + 3600000).toISOString(),
+      groups: groups || []
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/api/schedule-post`, payload);
+    
+    console.log('✅ Post scheduled successfully');
+    
+    res.json({
+      success: true,
+      message: '✅ Post scheduled successfully!',
+      postId: response.data?.postId,
+      scheduledTime: payload.scheduledTime,
+      content: content.substring(0, 100) + '...'
+    });
+  } catch (error) {
+    console.error('❌ Schedule error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== PUBLISH POST IMMEDIATELY ====================
+app.post('/publish-post', async (req, res) => {
+  const { content, image, videoUrl, groups } = req.body;
+  
+  try {
+    console.log('🚀 Publishing post immediately...');
+    
+    if (!content) {
+      return res.status(400).json({ error: 'Content is required' });
+    }
+    
+    const payload = {
+      message: content,
+      image,
+      videoUrl,
+      groups: groups || []
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/api/fb-publish`, payload);
+    
+    console.log('✅ Post published successfully');
+    
+    res.json({
+      success: true,
+      message: '✅ Post published instantly!',
+      postId: response.data?.postId,
+      timestamp: new Date().toISOString(),
+      groupsTarget: groups?.length || 1
+    });
+  } catch (error) {
+    console.error('❌ Publish error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== AUTO POST TO MULTIPLE GROUPS ====================
+app.post('/auto-post-groups', async (req, res) => {
+  const { content, image, videoUrl, groupIds } = req.body;
+  
+  try {
+    console.log('📢 Auto-posting to groups...');
+    
+    if (!content || !groupIds || groupIds.length === 0) {
+      return res.status(400).json({ 
+        error: 'Content and groupIds array are required' 
+      });
+    }
+    
+    const payload = {
+      content,
+      image,
+      videoUrl,
+      groups: groupIds,
+      delayBetweenPosts: randomDelay(2000, 5000)
+    };
+    
+    const response = await axios.post(
+      `${API_BASE_URL}/api/facebook-groups/auto-post`,
+      payload
+    );
+    
+    console.log(`✅ Auto-post initiated for ${groupIds.length} groups`);
+    
+    res.json({
+      success: true,
+      message: `✅ Auto-posting to ${groupIds.length} groups!`,
+      groupsCount: groupIds.length,
+      status: response.data?.status || 'In Progress',
+      estimatedTime: `${groupIds.length * 3} minutes`
+    });
+  } catch (error) {
+    console.error('❌ Auto-post error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== SHARE POSTS TO GROUPS ====================
+app.post('/share-posts', async (req, res) => {
+  const { postUrls, groupIds, delay } = req.body;
+  
+  try {
+    console.log('🔄 Sharing posts to groups...');
+    
+    if (!postUrls || !Array.isArray(postUrls) || postUrls.length === 0) {
+      return res.status(400).json({ 
+        error: 'postUrls array is required' 
+      });
+    }
+    
+    if (!groupIds || !Array.isArray(groupIds) || groupIds.length === 0) {
+      return res.status(400).json({ 
+        error: 'groupIds array is required' 
+      });
+    }
+    
+    const payload = {
+      posts: postUrls,
+      groups: groupIds,
+      delayBetween: delay || randomDelay(3000, 6000)
+    };
+    
+    const response = await axios.post(
+      `${API_BASE_URL}/api/facebook/auto-share-post`,
+      payload
+    );
+    
+    console.log(`✅ Share initiated: ${postUrls.length} posts → ${groupIds.length} groups`);
+    
+    res.json({
+      success: true,
+      message: `✅ Sharing ${postUrls.length} posts to ${groupIds.length} groups!`,
+      postsCount: postUrls.length,
+      groupsCount: groupIds.length,
+      totalShares: postUrls.length * groupIds.length,
+      status: response.data?.status || 'In Progress'
+    });
+  } catch (error) {
+    console.error('❌ Share error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== LIST SCHEDULED POSTS ====================
+app.get('/list-scheduled-posts', async (req, res) => {
+  try {
+    console.log('📋 Fetching scheduled posts...');
+    
+    const response = await axios.get(`${API_BASE_URL}/api/scheduled-posts/list`);
+    
+    const posts = response.data?.posts || [];
+    const stats = {
+      total: posts.length,
+      pending: posts.filter(p => p.status === 'pending').length,
+      published: posts.filter(p => p.status === 'published').length,
+      failed: posts.filter(p => p.status === 'failed').length
+    };
+    
+    res.json({
+      success: true,
+      message: 'Scheduled posts retrieved successfully',
+      statistics: stats,
+      posts: posts.slice(0, 20) // Return latest 20
+    });
+  } catch (error) {
+    console.error('❌ List error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== ERROR HANDLING ====================
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    success: false,
+    error: err.message || 'Internal server error',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ==================== START SERVER ====================
+app.listen(PORT, () => {
+  console.log(`
+╔════════════════════════════════════════════════════════════╗
+║     🚀 Facebook AutoShare API - Renewed v2.0               ║
+║     Developed by Mohamed Safwat © 2025                      ║
+╚════════════════════════════════════════════════════════════╝
+
+📍 Server Running on Port: ${PORT}
+🌍 API Base URL: ${API_BASE_URL}
+📝 Architecture: REST API-based (no browser automation)
+✅ Status: Production-Ready
+⏱️  Startup Time: ${new Date().toISOString()}
+
+Available Endpoints:
+  GET  /              - API Info
+  GET  /status        - Check API health
+  GET  /test-api      - Test connection
+  POST /schedule-post - Schedule posts
+  POST /publish-post  - Publish immediately
+  POST /auto-post-groups - Auto-post to multiple groups
+  POST /share-posts   - Share posts to groups
+  GET  /list-scheduled-posts - List scheduled posts
+
+🔗 Documentation:
+   - Main Dashboard: http://localhost:5000
+   - API Documentation: See endpoints above
+   - Support: Contact Mohamed Safwat
+
+═══════════════════════════════════════════════════════════
+  `);
+});
+
+export default app;
