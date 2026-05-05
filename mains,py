@@ -14,7 +14,7 @@ from instabot import likes, views, followers
 os.system("title Instagram followers, likes and views botter.")
 os.color("a")
 
-def __main__:
+def __main__)
  account_name=input("Account name ? ")
    if account_name=="":
      print('please input a real name')
