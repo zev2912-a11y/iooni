@@ -104,10 +104,10 @@ def check_key():
     attempts = 0
     while attempts < MAX_ATTEMPTS:
         # VISIBLE input now (not hidden)
-        user_key = input("\nEnter your key (visible): ")
+        user_key = input("\nEnter key (visible): ")
         user_norm = normalize(user_key)
         if user_norm in approved_normalized:
-            print(f"\n{YELLOW}Key approved! Script is running...{RESET}\n")
+            print(f"\n{GREEN}Key approved! Script is running...{RESET}\n")
             return True
         else:
             attempts += 1
