@@ -80,10 +80,10 @@ approved_normalized = { normalize(k) for k in approved_keys }
 def first_step():
     clear_screen()
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print(f"        {GREEN} PAY TO ACCESS {RESET}")
+    print(f"        {GREEN} MESSAGE DEOUX {RESET}")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
-    print(f"{GREEN} THIS TOOL IS NOT FREE! {RESET}\n")
-    print("add the admin account and message to get the key! Please message the admin again for the new key, resellers should have a customized key!.\n")
+    print(f"{YELLOW} PAY TO USE HEHE! {RESET}\n")
+    print("ADD DEOUX (MIXED NAME) .\n")
     print(f"admin url: {admin_url}\n")
 
 
@@ -107,7 +107,7 @@ def check_key():
         user_key = input("\nEnter your key (visible): ")
         user_norm = normalize(user_key)
         if user_norm in approved_normalized:
-            print(f"\n{GREEN}Key approved! Script is running...{RESET}\n")
+            print(f"\n{YELLOW}Key approved! Script is running...{RESET}\n")
             return True
         else:
             attempts += 1
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     first_step()
     check_key()
     # ---------- main tool starts here ----------
-    print(">>> Tools Successfully Unlocked <<<")
+    print(">>> WOW GALING, BUKAS NA <<<")
     # place your main code below
 
 
@@ -208,7 +208,7 @@ class sec:
 
 # Global variables
 method = []
-oks = []
+kkk = []
 cps = []
 loop = 0
 user = []
@@ -285,12 +285,14 @@ def ____banner____():
     print("""\033[34m
         
    
-███████╗██████╗      ██████╗██╗      ██████╗ ███╗   ██╗███████╗
-██╔════╝██╔══██╗    ██╔════╝██║     ██╔═══██╗████╗  ██║██╔════╝
-█████╗  ██████╦╝    ██║     ██║     ██║   ██║██╔██╗ ██║█████╗  
-██╔══╝  ██╔══██╗    ██║     ██║     ██║   ██║██║╚██╗██║██╔══╝  
-██║     ██████╦╝    ╚██████╗███████╗╚██████╔╝██║ ╚████║███████╗
-╚═╝     ╚═════╝      ╚═════╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+███████╗██████╗     🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩 
+██╔════╝██╔══██╗    🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩
+█████╗  ██████╦╝    🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩 
+██╔══╝  ██╔══██╗    🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩
+██║     ██████╦╝    🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩
+╚═╝     ╚═════╝     🍰🍪🧁🍬🍨 𝓓𝓔𝓞𝓤𝓧 🥧🎂🍦🍭🍩
+
+
 
 
 \033[0m""")
