@@ -82,7 +82,7 @@ def first_step():
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     print(f"        {GREEN} MESSAGE DEOUX {RESET}")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
-    print(f"{YELLOW} PAY TO USE HEHE! {RESET}\n")
+    print(f"{GREEN} PAY TO USE HEHE! {RESET}\n")
     print("ADD DEOUX (MIXED NAME) .\n")
     print(f"admin url: {admin_url}\n")
 
